@@ -1,1 +1,1 @@
-web: python run_api.py
+web: ./launch_api.sh
