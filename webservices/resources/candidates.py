@@ -232,25 +232,15 @@ class CandidateYearView(Resource):
                 two_years.append(year)
 
         year_results = {
-            #
             'candidate_id': kwargs['candidate_id'],
             'two_year_election_periods': sorted(two_years, reverse=True),
         }
 
-        # once pagination is merged--
-        # page_data = Pagination(1, 1, 1)
+        page_data = Pagination(1, 1, 1)
 
         data = {
                 'api_version': '0.2',
-                # once pagination is merged--
-                # pagination': page_data.as_json(),
-                # remove --
-                'pagination': {
-                    'page': 1,
-                    'per_page': 1,
-                    'count': 1,
-                    'pages': 1,
-                },
+                'pagination': page_data.as_json(),
                 'results': year_results
             }
 
