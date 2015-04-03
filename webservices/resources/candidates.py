@@ -226,12 +226,27 @@ class CandidateView(Resource):
 
 
 class CandidateYearView(Resource):
-    """ Returns a list of years that a candidate ran for office"""
+    """ Returns a list of two year periods that a candidate ran for office"""
     def get(self, **kwargs):
         candidate_id = kwargs['candidate_id']
         candidates = Candidate.query.filter_by(**{'candidate_id': candidate_id})
         candidates = candidates.paginate(1, 1, False).items
+
         years = marshal(candidates, candidate_years_fields)
+
+        two_years = []
+        for year in years[0]['election_years']:
+            if year % 2 == 1:
+                year += 1
+            if year not in two_years:
+                two_years.append(year)
+
+        year_results = {
+            #
+            'candidate_id': kwargs['candidate_id'],
+            'two_year_election_periods': sorted(two_years, reverse=True),
+        }
+
         # once pagination is merged--
         # page_data = Pagination(1, 1, 1)
 
@@ -246,7 +261,7 @@ class CandidateYearView(Resource):
                     'count': 1,
                     'pages': 1,
                 },
-                'results': years
+                'results': year_results
             }
 
         return data
