@@ -69,7 +69,10 @@ candidate_list_fields = {
     'pagination': fields.Nested(pagination_fields),
     'results': fields.Nested(candidate_fields),
 }
-
+candidate_years_fields = {
+    'candidate_id': fields.String,
+    'election_years': fields.List(fields.Integer),
+}
 
 class CandidateList(Resource):
     parser = reqparse.RequestParser()
@@ -222,4 +225,29 @@ class CandidateView(Resource):
         return count, candidates.order_by(CandidateDetail.expire_date.desc()).paginate(page_num, per_page, False).items
 
 
+class CandidateYearView(Resource):
+    """ Returns a list of years that a candidate ran for office"""
+    def get(self, **kwargs):
+        candidate_id = kwargs['candidate_id']
+        candidates = Candidate.query.filter_by(**{'candidate_id': candidate_id})
+        candidates = candidates.paginate(1, 1, False).items
+        years = marshal(candidates, candidate_years_fields)
+        # once pagination is merged--
+        # page_data = Pagination(1, 1, 1)
+
+        data = {
+                'api_version': '0.2',
+                # once pagination is merged--
+                # pagination': page_data.as_json(),
+                # remove --
+                'pagination': {
+                    'page': 1,
+                    'per_page': 1,
+                    'count': 1,
+                    'pages': 1,
+                },
+                'results': years
+            }
+
+        return data
 
