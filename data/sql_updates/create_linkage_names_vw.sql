@@ -1,4 +1,4 @@
-drop materialized view if exists ofe_linkage_mv;
+drop materialized view if exists ofec_linkage_mv;
 create materialized view ofec_linkage_mv as
 select
     l.linkages_sk as linkage_key,

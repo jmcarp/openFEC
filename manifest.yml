@@ -3,3 +3,4 @@ applications:
 - name: fec-api-stage
   memory: 512M
   host: fec-api-stage
+  timeout: 180
