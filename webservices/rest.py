@@ -3,40 +3,6 @@ A RESTful web service supporting fulltext and field-specific searches on FEC
 candidate data.
 
 SEE DOCUMENTATION FOLDER
-(We can leave this here for now but this is all covered in the documentation
-and changes should be reflected there)
-
-Supported parameters across all objects::
-
-    q=         (fulltext search)
-
-Supported for /candidate ::
-
-    /<cand_id>   Single candidate's record
-    cand_id=     Synonym for /<cand_id>
-    fec_id=      Synonym for /<cand_id>
-    office=      (governmental office run for)
-    state=       (two-letter code)
-    district=    two-digit number
-    name=        (candidate's name)
-    page=        Page number
-    party=       (3-letter abbreviation)
-    per_page=    Number of records per page
-    year=        (any year in which candidate ran)
-    fields=      specify the fields returned
-
-Supported for /committee ::
-
-    /<cmte_id>   Single candidate's record
-    cmte_id=     Synonym for /<cmte_id>
-    fec_id=      Synonym for /<cmte_id>
-    name=        (committee's name)
-    state=       (two-letter code)
-    candidate=   (associated candidate's name)
-    type=   one-letter code see decoders.cmte
-    designation=  one-letter code see decoders.designation
-    year=        The four-digit election year
-
 """
 import logging
 import sys
@@ -55,6 +21,7 @@ from webservices.resources.candidates import CandidateList, CandidateView
 from webservices.resources.totals import TotalsView
 from webservices.resources.reports import ReportsView
 from webservices.resources.committees import CommitteeList, CommitteeView
+from webservices.common.util import Pagination
 
 speedlogger = logging.getLogger('speed')
 speedlogger.setLevel(logging.CRITICAL)
@@ -113,10 +80,10 @@ class NameSearch(restful.Resource):
         qry = sa.sql.text(self.fulltext_qry)
         findme = ' & '.join(args['q'].split())
         data = db_conn().execute(qry, findme=findme).fetchall()
+        page_data = Pagination(1, 1, len(data))
 
         return {"api_version": "0.2",
-                "pagination": {'per_page': 20, 'page': 1, 'pages': 1,
-                               'count': len(data)},
+                "pagination": page_data.as_json(),
                 "results": [dict(d) for d in data]}
 
 
