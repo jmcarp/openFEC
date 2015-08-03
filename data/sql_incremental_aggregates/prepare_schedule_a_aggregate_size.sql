@@ -23,7 +23,7 @@ from sched_a
 where rpt_yr >= :START_YEAR_ITEMIZED
 and contb_receipt_amt is not null
 and (memo_cd != 'X' or memo_cd is null)
-and line_num in ('11AI', '17A')
+and line_num in ('11AI', '17A', '18', '12')
 group by cmte_id, cycle, size
 ;
 
@@ -59,7 +59,7 @@ begin
         ) t
         where contb_receipt_amt is not null
         and (memo_cd != 'X' or memo_cd is null)
-        and line_num in ('11AI', '17A')
+        and line_num in ('11AI', '17A', '18', '12')
         group by cmte_id, cycle, size
     ),
     inc as (
