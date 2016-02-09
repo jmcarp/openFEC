@@ -102,14 +102,6 @@ def make_sort_args(default=None, validator=None, default_hide_null=False, defaul
             validate=validator,
             description='Provide a field to sort by. Use - for descending order.',
         ),
-        'sort_hide_null': fields.Bool(
-            missing=default_hide_null,
-            description='Hide null values on sorted column(s).'
-        ),
-        'sort_nulls_large': fields.Bool(
-            missing=default_nulls_large,
-            description='Treat null values as large on sorted column(s)',
-        )
     }
 
 def make_seek_args(field=fields.Int, description=None):
