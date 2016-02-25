@@ -448,6 +448,7 @@ candidate_totals = {
     'office': fields.List(fields.Str(validate=validate.OneOf(['', 'H', 'S', 'P'])), description='Governmental office candidate runs for: House, Senate or presidential'),
     'election_full': election_full,
     'state': fields.List(IStr, description='State of candidate'),
+    'district': fields.List(District, description='District of candidate'),
     'party': fields.List(IStr, description='Three-letter party code'),
     'min_receipts': fields.Int('Minimum aggregated receipts'),
     'max_receipts': fields.Int('Maximum aggregated receipts'),
